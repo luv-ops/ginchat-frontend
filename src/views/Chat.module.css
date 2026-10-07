@@ -65,19 +65,40 @@
   font-size: 20px;
 }
 
-.messagesContainer {
+/* Listy 虚拟列表的视口外壳（flex 撑满头部与输入框之间的区域） */
+.messagesViewport {
   flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  padding-bottom: 70px;
-  height: calc(100vh - 60px - 60px);
+  min-height: 0;
   margin-top: 60px;
-  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 覆盖 antd Listy 默认 item 样式（内边距/分割线/hover 底色）。
+   所有间距放在数据行内，避免在虚拟滚动容器上加 padding 干扰偏移计算。
+   用复合选择器提高特异性以覆盖 antd CSS-in-JS 注入的样式。 */
+.messagesContainer :global(.ant-listy-item).messageRow {
+  padding: 0;
+  border-bottom: none;
+  transition: none;
+}
+
+.messagesContainer :global(.ant-listy-item).messageRow:hover {
+  background-color: transparent;
 }
 
 .messageItem {
   display: flex;
-  margin-bottom: 15px;
+  padding: 0 20px 15px;
+  box-sizing: border-box;
+}
+
+/* 首条距顶部留白、末条为固定输入框留出空间（按数据索引判断，不受虚拟窗口影响） */
+.firstMessage {
+  padding-top: 20px;
+}
+
+.lastMessage {
+  padding-bottom: 70px;
 }
 
 /* 自己发送的消息在右侧 */

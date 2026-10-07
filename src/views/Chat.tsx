@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { debounce } from 'lodash'
+import { Listy, type ListyRef } from 'antd'
 import { useChatStore } from '../store/chat'
 import EmojiPicker from '../components/EmojiPicker'
 import request from '../utils/request'
@@ -27,6 +28,8 @@ const ALLOWED_FILE_TYPES = [
   'audio/mp3',
 ]
 
+// 虚拟列表的行高估算值由 antd 主题内部提供，实际高度由 ResizeObserver 动态测量
+
 export default function Chat() {
   const navigate = useNavigate()
   const params = useParams()
@@ -40,13 +43,20 @@ export default function Chat() {
   // 仅临时存储本地文件，不上传
   const localImgFileRef = useRef<File | null>(null)
 
-  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  // Listy 命令式滚动控制；scrollEl 为其内部滚动容器（由 onScroll 捕获）
+  const listyRef = useRef<ListyRef>(null)
+  const scrollElRef = useRef<HTMLElement | null>(null)
+  const viewportRef = useRef<HTMLDivElement>(null)
+  // 加载更早消息前，当前首条消息的 key，用于加载后锚点定位、保持视觉位置
+  const anchorKeyRef = useRef<number | null>(null)
   const shouldScrollRef = useRef(true)
 
   const [inputText, setInputText] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  // 虚拟列表视口高度（Listy 的 height 必须是数值）
+  const [listHeight, setListHeight] = useState(0)
 
   const messages =
     useChatStore((s) => s.messages[peerId]) ?? []
@@ -54,11 +64,30 @@ export default function Chat() {
   const prependMessages = useChatStore((s) => s.prependMessages)
   const sendMessageToStore = useChatStore((s) => s.sendMessage)
 
-  const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      const el = messagesContainerRef.current
-      if (el) el.scrollTop = el.scrollHeight
-    })
+  const me = getUserInfo()
+
+  // 测量消息视口高度
+  useEffect(() => {
+    const el = viewportRef.current
+    if (!el) return
+    const update = () => setListHeight(el.clientHeight)
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const scrollToBottom = (id?: number) => {
+    const doScroll = () => {
+      const list = useChatStore.getState().messages[peerId] ?? []
+      const targetId = id ?? list[list.length - 1]?.id
+      if (targetId != null) {
+        listyRef.current?.scrollTo({ key: targetId, align: 'bottom' })
+      }
+    }
+    requestAnimationFrame(doScroll)
+    // 图片等异步内容加载后高度变化，再补一次确保贴底
+    setTimeout(doScroll, 150)
   }
 
   async function sendChatRequest(content: string, msgType = 0) {
@@ -88,12 +117,11 @@ export default function Chat() {
         const imgUrl = uploadRes.data
         await sendChatRequest(imgUrl, 1)
         // 将消息添加到消息列表
-        sendMessageToStore(peerId, imgUrl, 1)
+        const msg = sendMessageToStore(peerId, imgUrl, 1)
+        scrollToBottom(msg.id)
       } catch (err) {
         console.error('发送图片失败:', err)
         alert(getErrorMessage(err, '发送失败'))
-      } finally {
-        scrollToBottom()
       }
       return
     }
@@ -103,13 +131,13 @@ export default function Chat() {
     try {
       await sendChatRequest(content, 0)
       // 将消息添加到消息列表
-      sendMessageToStore(peerId, content, 0)
+      const msg = sendMessageToStore(peerId, content, 0)
+      scrollToBottom(msg.id)
     } catch (err) {
       console.log(err)
       alert(getErrorMessage(err, '发送失败'))
     } finally {
       setInputText('')
-      scrollToBottom()
     }
   }
 
@@ -175,10 +203,9 @@ export default function Chat() {
     // 只有在加载更多历史消息（向上滚动）时才禁用自动滚动，首次加载不禁用
     shouldScrollRef.current = !isLoadMore
 
-    const scrollEl = messagesContainerRef.current
-    let oldScrollHeight = 0
-    if (scrollEl) {
-      oldScrollHeight = scrollEl.scrollHeight // 1. 记录旧高度
+    // 记录加载前的首条消息 key，加载后锚点定位保持视觉位置
+    if (isLoadMore) {
+      anchorKeyRef.current = messages[0]?.id ?? null
     }
 
     try {
@@ -189,7 +216,6 @@ export default function Chat() {
         size: 20,
       })
       if (result.code === 200) {
-        const me = getUserInfo()
         const historyMessages: ChatMessage[] = result.data.map((msg) => ({
           id: msg.id,
           type: String(msg.fromId) === String(me.id) ? 'sent' : 'received',
@@ -209,14 +235,16 @@ export default function Chat() {
 
         setHasMore(historyMessages.length > 0)
         setCurrentPage(page)
-        // 3. DOM 更新后，补偿滚动位置
-        requestAnimationFrame(() => {
-          if (scrollEl && isLoadMore) {
-            const newScrollHeight = scrollEl.scrollHeight
-            // 关键：让滚动条往下“补”新增的高度
-            scrollEl.scrollTop = newScrollHeight - oldScrollHeight
-          }
-        })
+
+        if (isLoadMore) {
+          // 虚拟列表通过 key 锚点恢复位置，无需手动计算高度差
+          const anchorKey = anchorKeyRef.current
+          requestAnimationFrame(() => {
+            if (anchorKey != null) {
+              listyRef.current?.scrollTo({ key: anchorKey, align: 'top' })
+            }
+          })
+        }
       }
     } catch (error) {
       console.error('获取历史消息失败:', error)
@@ -224,12 +252,13 @@ export default function Chat() {
       setIsLoading(false)
       setTimeout(() => {
         shouldScrollRef.current = true
-        // 如果是首次加载消息（非加载更多），确保滚动到底部
+        // 首次加载消息（非加载更多），滚动到最新一条
         if (!isLoadMore) {
-          setTimeout(() => {
-            const el = messagesContainerRef.current
-            if (el) el.scrollTop = el.scrollHeight
-          }, 50)
+          const list = useChatStore.getState().messages[peerId] ?? []
+          const lastId = list[list.length - 1]?.id
+          if (lastId != null) {
+            listyRef.current?.scrollTo({ key: lastId, align: 'bottom' })
+          }
         }
       }, 100)
     }
@@ -246,7 +275,7 @@ export default function Chat() {
   const handleScroll = useMemo(
     () =>
       debounce(() => {
-        const container = messagesContainerRef.current
+        const container = scrollElRef.current
         if (!container) return
         if (container.scrollTop <= 20) {
           void loadHistoryRef.current(pageRef.current + 1, true)
@@ -269,13 +298,72 @@ export default function Chat() {
 
   // 新消息到达时滚动到底部
   useEffect(() => {
-    if (shouldScrollRef.current) {
-      scrollToBottom()
+    if (shouldScrollRef.current && messages.length > 0) {
+      const lastId = messages[messages.length - 1].id
+      listyRef.current?.scrollTo({ key: lastId, align: 'bottom' })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages])
 
-  const me = getUserInfo()
+  const renderMessage = (msg: ChatMessage, index: number) => {
+    const extraClass =
+      `${index === 0 ? styles.firstMessage : ''} ${
+        index === messages.length - 1 ? styles.lastMessage : ''
+      }`.trim()
+    return (
+    <div
+      className={`${styles.messageItem} ${extraClass} ${msg.type === 'sent' ? styles.sent : styles.received}`}
+    >
+      {msg.type === 'sent' ? (
+        <>
+          <div className={styles.messageContentWrapper}>
+            <div className={styles.messageBubble}>
+              {/* msgType为1表示图片，为0表示文字 */}
+              {Number(msg.msgType) === 1 ? (
+                <img src={msg.content} className={styles.messageImage} />
+              ) : (
+                <span>{msg.content}</span>
+              )}
+            </div>
+            <span className={styles.messageTime}>{formatTime(msg.time)}</span>
+          </div>
+          <div className={styles.messageAvatarWrapper}>
+            <span className={styles.messageAvatar}>
+              {msg.fromAvatar || me.avatar || '👤'}
+            </span>
+            {isGroup && (
+              <span className={styles.messageSender}>
+                {formatName(me.name || '未知用户')}
+              </span>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={styles.messageAvatarWrapper}>
+            <span className={styles.messageAvatar}>{msg.avatar || chatAvatar}</span>
+            {isGroup && (
+              <span className={styles.messageSender}>
+                {formatName(msg.name || '未知用户')}
+              </span>
+            )}
+          </div>
+          <div className={styles.messageContentWrapper}>
+            <div className={styles.messageBubble}>
+              {/* msgType为1表示图片，为0表示文字 */}
+              {Number(msg.msgType) === 1 ? (
+                <img src={msg.content} className={styles.messageImage} />
+              ) : (
+                <span>{msg.content}</span>
+              )}
+            </div>
+            <span className={styles.messageTime}>{formatTime(msg.time)}</span>
+          </div>
+        </>
+      )}
+    </div>
+    )
+  }
 
   return (
     <div className={styles.chatPage}>
@@ -294,65 +382,25 @@ export default function Chat() {
         </div>
       </div>
 
-      <div
-        ref={messagesContainerRef}
-        className={styles.messagesContainer}
-        onScroll={handleScroll}
-      >
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`${styles.messageItem} ${msg.type === 'sent' ? styles.sent : styles.received}`}
-          >
-            {msg.type === 'sent' ? (
-              <>
-                <div className={styles.messageContentWrapper}>
-                  <div className={styles.messageBubble}>
-                    {/* msgType为1表示图片，为0表示文字 */}
-                    {Number(msg.msgType) === 1 ? (
-                      <img src={msg.content} className={styles.messageImage} />
-                    ) : (
-                      <span>{msg.content}</span>
-                    )}
-                  </div>
-                  <span className={styles.messageTime}>{formatTime(msg.time)}</span>
-                </div>
-                <div className={styles.messageAvatarWrapper}>
-                  <span className={styles.messageAvatar}>
-                    {msg.fromAvatar || me.avatar || '👤'}
-                  </span>
-                  {isGroup && (
-                    <span className={styles.messageSender}>
-                      {formatName(me.name || '未知用户')}
-                    </span>
-                  )}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className={styles.messageAvatarWrapper}>
-                  <span className={styles.messageAvatar}>{msg.avatar || chatAvatar}</span>
-                  {isGroup && (
-                    <span className={styles.messageSender}>
-                      {formatName(msg.name || '未知用户')}
-                    </span>
-                  )}
-                </div>
-                <div className={styles.messageContentWrapper}>
-                  <div className={styles.messageBubble}>
-                    {/* msgType为1表示图片，为0表示文字 */}
-                    {Number(msg.msgType) === 1 ? (
-                      <img src={msg.content} className={styles.messageImage} />
-                    ) : (
-                      <span>{msg.content}</span>
-                    )}
-                  </div>
-                  <span className={styles.messageTime}>{formatTime(msg.time)}</span>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
+      <div ref={viewportRef} className={styles.messagesViewport}>
+        {listHeight > 0 && (
+          <Listy
+            ref={listyRef}
+            items={messages}
+            rowKey="id"
+            virtual
+            height={listHeight}
+            itemRender={renderMessage}
+            onScroll={(e) => {
+              scrollElRef.current = e.currentTarget
+              handleScroll()
+            }}
+            classNames={{
+              root: styles.messagesContainer,
+              item: styles.messageRow,
+            }}
+          />
+        )}
       </div>
 
       <div className={styles.inputContainer}>
