@@ -112,13 +112,4 @@ src/
 
 聊天、群详情、群成员页面不显示底部 TabBar。
 
-## 与 Vue 版的主要映射
 
-| Vue 3 | React 19 |
-|-------|----------|
-| `<script setup>` | 函数组件 + Hooks |
-| vue-router (`createWebHashHistory`) | react-router-dom (`HashRouter`) |
-| Pinia | Zustand |
-| `<style scoped>` | CSS Modules（`.module.css`） |
-| `router.beforeEach` | `<RequireAuth>` / `<RedirectIfLoggedIn>` 守卫组件 |
-| 直接修改响应式对象 / 数组 | Zustand 不可变 `set()` 更新 |
