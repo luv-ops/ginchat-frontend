@@ -1,0 +1,138 @@
+.friendRequestsPage {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.header {
+  background: #12b7f5;
+  padding: 60px 15px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backBtn {
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.headerPlaceholder {
+  width: 30px;
+}
+
+.loading {
+  padding: 50px;
+  text-align: center;
+  color: #999;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+}
+
+.emptyIcon {
+  font-size: 80px;
+  margin-bottom: 20px;
+}
+
+.emptyText {
+  color: #999;
+  font-size: 15px;
+}
+
+.requestsList {
+  padding: 10px;
+}
+
+.requestItem {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.requestInfo {
+  flex: 1;
+  margin-left: 15px;
+}
+
+.requestName {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.requestStatus {
+  font-size: 14px;
+  color: #ff9800;
+}
+
+.requestStatusReceived {
+  color: #666;
+}
+
+.requestActions {
+  display: flex;
+  gap: 10px;
+}
+
+.actionBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.actionBtn:hover {
+  opacity: 0.8;
+}
+
+.acceptBtn {
+  background: #12b7f5;
+  color: #fff;
+}
+
+.rejectBtn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.statusTag {
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.statusPending {
+  background: #fff3e0;
+  color: #ff9800;
+}

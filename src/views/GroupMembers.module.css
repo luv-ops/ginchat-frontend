@@ -1,0 +1,109 @@
+.membersPage {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.header {
+  background: #12b7f5;
+  padding: 60px 15px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backBtn {
+  font-size: 32px;
+  color: #fff;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.placeholder {
+  width: 30px;
+}
+
+.subtitle {
+  background: #fff;
+  padding: 15px;
+  font-size: 14px;
+  color: #999;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.memberList {
+  background: #fff;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.loading {
+  padding: 40px;
+  text-align: center;
+  color: #999;
+}
+
+.loadingMore,
+.noMore {
+  padding: 15px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.memberItem {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.memberItem:last-child {
+  border-bottom: none;
+}
+
+.memberAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.memberInfo {
+  flex: 1;
+}
+
+.memberName {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ownerTag {
+  background: linear-gradient(135deg, #ffd700, #ffaa00);
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.memberId {
+  font-size: 13px;
+  color: #999;
+}

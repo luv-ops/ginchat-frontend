@@ -1,0 +1,232 @@
+.chatPage {
+  height: 100vh;
+  background: #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chatHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #12b7f5;
+  display: flex;
+  height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99;
+}
+
+.backBtn {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+.contactInfo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
+.contactAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.contactName {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.headerActions {
+  display: flex;
+  gap: 15px;
+}
+
+.actionIcon {
+  font-size: 20px;
+}
+
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 70px;
+  height: calc(100vh - 60px - 60px);
+  margin-top: 60px;
+  box-sizing: border-box;
+}
+
+.messageItem {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+/* 自己发送的消息在右侧 */
+.messageItem.sent {
+  justify-content: flex-end;
+}
+
+/* 对方发送的消息在左侧 */
+.messageItem.received {
+  justify-content: flex-start;
+}
+
+.messageAvatarWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.messageItem.sent .messageAvatarWrapper {
+  margin-left: 10px;
+}
+
+.messageItem.received .messageAvatarWrapper {
+  margin-right: 10px;
+}
+
+.messageAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.messageSender {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.messageContentWrapper {
+  max-width: 70%;
+}
+
+.messageBubble {
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 15px;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.messageImage {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
+}
+
+.messageItem.sent .messageBubble {
+  background: #12b7f5;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.messageItem.received .messageBubble {
+  background: #fff;
+  color: #333;
+  border-bottom-left-radius: 4px;
+}
+
+.messageTime {
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+  display: block;
+}
+
+.messageItem.sent .messageTime {
+  text-align: right;
+}
+
+.messageItem.received .messageTime {
+  text-align: left;
+}
+
+.inputContainer {
+  position: fixed;
+  bottom: 0;
+  background: #fff;
+  padding: 10px 15px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  border-top: 1px solid #e5e5e5;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  transition: transform 0.3s;
+}
+
+.inputActions {
+  display: flex;
+  gap: 8px;
+}
+
+.inputIcon {
+  font-size: 24px;
+}
+
+.fileLabel {
+  cursor: pointer;
+}
+
+.inputWrapper {
+  flex: 1;
+  background: #f5f5f5;
+  border-radius: 25px;
+  padding: 8px 15px;
+}
+
+.inputWrapper textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  resize: none;
+  max-height: 120px;
+  line-height: 1.4;
+  min-height: 28px;
+}
+
+.sendBtn {
+  background: #12b7f5;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.sendBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}

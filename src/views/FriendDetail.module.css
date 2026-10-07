@@ -1,0 +1,98 @@
+.friendDetailPage {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.header {
+  background: #12b7f5;
+  padding: 60px 15px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backBtn {
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.headerPlaceholder {
+  width: 30px;
+}
+
+.content {
+  padding: 20px 15px;
+}
+
+.profileCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.avatarWrapper {
+  margin-bottom: 15px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.name {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.userId {
+  font-size: 14px;
+  color: #999;
+}
+
+.actionSection {
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.actionBtn {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.actionBtn:hover {
+  opacity: 0.9;
+}
+
+.actionBtn:active {
+  opacity: 0.8;
+}
+
+.primaryBtn {
+  background: #12b7f5;
+  color: #fff;
+}

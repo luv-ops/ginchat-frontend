@@ -1,0 +1,120 @@
+.loginPage {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.loginBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.3;
+}
+
+.loginContainer {
+  width: 90%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.logoSection {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-size: 64px;
+  margin-bottom: 10px;
+}
+
+.logoText {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1a73e8;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.inputItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 15px;
+  font-size: 18px;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.inputItem input {
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.inputItem input:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.loginBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.loginBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.formFooter {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.linkBtn {
+  color: #1a73e8;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.linkBtn:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,115 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  width: 90%;
+  max-width: 350px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.modalHeader {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.modalClose {
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+}
+
+.modalBody {
+  padding: 20px;
+}
+
+.inputItem {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.inputItem:last-child {
+  margin-bottom: 0;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}
+
+.inputItem input {
+  width: 100%;
+  padding: 12px 15px 12px 40px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.inputItem input:focus {
+  outline: none;
+  border-color: #12b7f5;
+}
+
+.modalFooter {
+  padding: 15px 20px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.btnCancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btnCancel:hover {
+  opacity: 0.8;
+}
+
+.btnConfirm {
+  background: #12b7f5;
+  color: #fff;
+}
+
+.btnConfirm:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

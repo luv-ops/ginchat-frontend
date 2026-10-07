@@ -1,0 +1,123 @@
+.loginPage {
+  min-height: 100vh;
+  background: #f5f5f5;
+  position: relative;
+}
+
+.loginBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 350px;
+  background: linear-gradient(135deg, #12b7f5 0%, #0080ff 100%);
+}
+
+.loginContainer {
+  position: relative;
+  z-index: 10;
+  padding: 60px 20px 20px;
+}
+
+.logoSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.logoText {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 15px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.formContainer {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.inputItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.inputItem:focus-within {
+  border-color: #12b7f5;
+}
+
+.inputIcon {
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+.inputItem input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+}
+
+.eyeIcon {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #12b7f5 0%, #0080ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.loginBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.loginBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.links a {
+  color: #999;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.links a:hover {
+  color: #12b7f5;
+}
