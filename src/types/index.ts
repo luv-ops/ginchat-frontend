@@ -56,10 +56,16 @@ export interface ContactItem {
 
 /** 好友请求项 */
 export interface FriendRequestItem {
-  id: number
   fromId: number
+  targetId: number
+  /** 列表接口为空串；WS 推送时为消息类型 'friendRequest' */
+  type?: string
   name: string
   avatar?: string
+  msg?: string
+  /** 请求状态（如待处理/已同意/已拒绝） */
+  status?: number
+  create_at?: string
   remark?: string
 }
 

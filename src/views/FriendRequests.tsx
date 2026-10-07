@@ -110,7 +110,7 @@ export default function FriendRequests() {
       ) : (
         <div className={styles.requestsList}>
           {friendRequests.map((request) => (
-            <div key={request.id} className={styles.requestItem}>
+            <div key={request.fromId} className={styles.requestItem}>
               <span className={styles.avatar}>{request.avatar || '👤'}</span>
               <div className={styles.requestInfo}>
                 <div className={styles.requestName}>{request.name}</div>

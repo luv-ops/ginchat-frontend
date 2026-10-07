@@ -1,5 +1,9 @@
 import { create } from 'zustand'
-import { GetConversations, getUserInfo } from '../api/user'
+import {
+  GetConversations,
+  getFriendRequestsUnreadCount,
+  getUserInfo,
+} from '../api/user'
 import type {
   ChatMessage,
   ContactItem,
@@ -22,6 +26,7 @@ interface ChatState {
   setFriendRequests: (list: FriendRequestItem[]) => void
   removeFriendRequest: (fromId: number) => void
   setFriendRequestUnreadCount: (count: number) => void
+  fetchFriendRequestUnreadCount: () => Promise<void>
 
   setMessages: (peerId: number, msgs: ChatMessage[]) => void
   prependMessages: (peerId: number, older: ChatMessage[]) => void
@@ -68,6 +73,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   setFriendRequestUnreadCount: (count) =>
     set({ friendRequestUnreadCount: count }),
+
+  fetchFriendRequestUnreadCount: async () => {
+    try {
+      const result = await getFriendRequestsUnreadCount()
+      if (result.code === 200) {
+        set({ friendRequestUnreadCount: result.data.unread })
+      }
+    } catch (error) {
+      console.error('获取好友请求未读数量失败:', error)
+    }
+  },
 
   setMessages: (peerId, msgs) =>
     set((state) => ({

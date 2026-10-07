@@ -11,6 +11,7 @@ QQ 风格的即时通讯应用前端，使用 **React 19 + TypeScript + Vite** �
 | 视图框架 | React 19 | 函数组件 + Hooks |
 | 开发语言 | TypeScript | 严格模式（`noUnusedLocals` / `verbatimModuleSyntax`） |
 | 构建工具 | Vite 8 | 路由级懒加载分包 |
+| 组件库 | Ant Design 6.6.5 | Listy 组件（虚拟列表）引入 |
 | 路由 | react-router-dom 7 | `HashRouter`（hash 模式） |
 | 状态管理 | Zustand 5 | 替代 Vue 版的 Pinia |
 | HTTP | axios | 统一实例 + 拦截器 |

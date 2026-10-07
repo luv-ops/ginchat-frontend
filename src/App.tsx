@@ -18,9 +18,20 @@ function AppShell() {
   // 这里不使用 useNavigate（其引用会随路由变化，放进依赖会导致切页面时断开重连），
   // token 过期跳转与 request 拦截器保持一致，直接改 hash。
   useEffect(() => {
-    const { handleChatMessage, handleFriendRequest, handleGroupMessage } =
-      useChatStore.getState()
+    const {
+      handleChatMessage,
+      handleFriendRequest,
+      handleGroupMessage,
+      fetchFriendRequestUnreadCount,
+    } = useChatStore.getState()
 
+    // 监听器无条件注册一次：手动登录场景下挂载时还没有 token、不会走 connect，
+    // 但 Login 成功后会主动 connect，这里必须先订阅好，否则推送消息无人接收。
+    ws.on('chat', handleChatMessage)
+    ws.on('friendRequest', handleFriendRequest)
+    ws.on('groupMessage', handleGroupMessage)
+
+    // 已登录状态进入应用（如刷新页面）才在此连接；手动登录由 Login 页 connect
     const raw = localStorage.getItem('token')
     if (raw) {
       const { token, createTime } = JSON.parse(raw) as Partial<TokenInfo>
@@ -29,9 +40,8 @@ function AppShell() {
         window.location.hash = '#/login'
       } else if (token) {
         ws.connect(token)
-        ws.on('chat', handleChatMessage)
-        ws.on('friendRequest', handleFriendRequest)
-        ws.on('groupMessage', handleGroupMessage)
+        // 已登录状态下进入应用（如刷新页面），拉取好友请求未读数
+        void fetchFriendRequestUnreadCount()
       }
     }
 

@@ -2,6 +2,7 @@ import { useState, type SubmitEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ws from '../utils/websocket'
 import { login } from '../api/user'
+import { useChatStore } from '../store'
 import { getErrorMessage } from '../utils/error'
 import styles from './Login.module.css'
 
@@ -37,6 +38,8 @@ export default function Login() {
         localStorage.setItem('user', JSON.stringify(user))
         // 消息监听统一在 App 中注册，这里只需建立连接
         ws.connect(result.data.token)
+        // 拉取好友请求未读数，使联系人 tab 徽标立即显示
+        void useChatStore.getState().fetchFriendRequestUnreadCount()
         navigate('/message')
       }
     } catch (error) {

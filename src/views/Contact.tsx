@@ -3,7 +3,6 @@ import { useNavigate, createSearchParams } from 'react-router-dom'
 import AddFriendModal from '../components/AddFriendModal'
 import { useChatStore } from '../store'
 import request from '../utils/request'
-import { getFriendRequestsUnreadCount } from '../api/user'
 import type { ContactItem } from '../types'
 import styles from './Contact.module.css'
 
@@ -13,8 +12,8 @@ export default function Contact() {
   const contacts = useChatStore((s) => s.contacts)
   const setContacts = useChatStore((s) => s.setContacts)
   const friendRequestUnreadCount = useChatStore((s) => s.friendRequestUnreadCount)
-  const setFriendRequestUnreadCount = useChatStore(
-    (s) => s.setFriendRequestUnreadCount,
+  const fetchFriendRequestUnreadCount = useChatStore(
+    (s) => s.fetchFriendRequestUnreadCount,
   )
 
   const [showAddFriendModal, setShowAddFriendModal] = useState(false)
@@ -28,17 +27,6 @@ export default function Contact() {
       }
     } catch (error) {
       console.error('获取联系人失败:', error)
-    }
-  }
-
-  const getUnreadFriendReqCount = async () => {
-    try {
-      const result = await getFriendRequestsUnreadCount()
-      if (result.code === 200) {
-        setFriendRequestUnreadCount(result.data.unread)
-      }
-    } catch (error) {
-      console.error('获取好友请求未读数量失败:', error)
     }
   }
 
@@ -77,7 +65,7 @@ export default function Contact() {
   }
 
   useEffect(() => {
-    void getUnreadFriendReqCount()
+    void fetchFriendRequestUnreadCount()
     void getContactList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
