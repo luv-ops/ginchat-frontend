@@ -1,6 +1,6 @@
 # gin-chat-react
 
-QQ 风格的即时通讯应用前端，使用 **React 19 + TypeScript + Vite** 构建，是 [gin-chat-vue3](../gin-chat-vue3)（Vue 3 + JavaScript）的 React 迁移版本，界面、路由与业务逻辑与 Vue 版保持一致。
+QQ 风格的即时通讯应用前端，使用 **React 19 + TypeScript + Vite** 构建
 
 后端为 Go + Gin 实现的 [GinChat](../GinChat)，提供 HTTP 接口与 WebSocket 长连接。
 
